@@ -20,3 +20,4 @@ add_compile_options(-Wall
 # project subdirectories
 add_subdirectory(blink)
 add_subdirectory(hello_usb)
+add_subdirectory(board_test)
