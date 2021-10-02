@@ -21,3 +21,4 @@ add_compile_options(-Wall
 add_subdirectory(blink)
 add_subdirectory(hello_usb)
 add_subdirectory(board_test)
+add_subdirectory(display_test)
