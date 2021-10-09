@@ -165,6 +165,8 @@ static void init_pins(){
 
 const size_t PAGE_ROW_COUNT = 8;
 const size_t PAGE_COLUMN_COUNT = 128;
+const size_t PAGE_COLUMN_MASK = PAGE_COLUMN_COUNT - 1;
+const size_t CHAR_WIDTH = 6;
 const size_t PAGE_COUNT = 8; 
 uint8_t display_buffer[8 * 128];
 
@@ -218,14 +220,58 @@ int main() {
 
     absolute_time_t next_frame = make_timeout_time_us(16667);
 
-    while(true){
+    char text[] = "The quick brown fox jumps over the lazy dog.";
 
-         for(size_t c = 0; c < 26; c++){
-            for(size_t i = 0; i < 5; i++){
-             display_buffer[c*6 + i] = font[c*5+i];
+    //while(true){
+
+        size_t buf_idx = 0;
+        write_command(0xB0);
+        for(size_t text_idx = 0; text_idx < strlen(text) && buf_idx < PAGE_COUNT * PAGE_COLUMN_COUNT; text_idx++){
+
+            char c = text[text_idx];
+
+            //wrap partial characters
+            if((((buf_idx & PAGE_COLUMN_MASK) + CHAR_WIDTH) & ~PAGE_COLUMN_MASK) != 0){
+                buf_idx = (buf_idx & ~PAGE_COLUMN_MASK) + PAGE_COLUMN_COUNT;
             }
-            display_buffer[c*6 + 6] = 0x0;
-         }
+
+            if(c >= 'A' && c <= 'Z') {
+
+                display_buffer[buf_idx++] = font[(c - 'A') * 5];
+                display_buffer[buf_idx++] = font[(c - 'A') * 5 + 1];
+                display_buffer[buf_idx++] = font[(c - 'A') * 5 + 2];
+                display_buffer[buf_idx++] = font[(c - 'A') * 5 + 3];
+                display_buffer[buf_idx++] = font[(c - 'A') * 5 + 4];
+                display_buffer[buf_idx++] = 0x00;
+            
+            } else if(c >= 'a' && c <= 'z'){
+
+                display_buffer[buf_idx++] = font[(c - 'a') * 5];
+                display_buffer[buf_idx++] = font[(c - 'a') * 5 + 1];
+                display_buffer[buf_idx++] = font[(c - 'a') * 5 + 2];
+                display_buffer[buf_idx++] = font[(c - 'a') * 5 + 3];
+                display_buffer[buf_idx++] = font[(c - 'a') * 5 + 4];
+                display_buffer[buf_idx++] = 0x00;
+
+            }
+            else if (c == ' ' ) {
+                display_buffer[buf_idx++] = 0x00;
+                display_buffer[buf_idx++] = 0x00;
+                display_buffer[buf_idx++] = 0x00;
+                display_buffer[buf_idx++] = 0x00;
+                display_buffer[buf_idx++] = 0x00;
+                display_buffer[buf_idx++] = 0x00;
+            }
+            else {
+                display_buffer[buf_idx++] = 0xFF;
+                display_buffer[buf_idx++] = 0xFF;
+                display_buffer[buf_idx++] = 0xFF;
+                display_buffer[buf_idx++] = 0xFF;
+                display_buffer[buf_idx++] = 0xFF;
+                display_buffer[buf_idx++] = 0x00;
+            }
+
+        }
 
         busy_wait_until(next_frame);
         next_frame = make_timeout_time_us(16667);
@@ -245,5 +291,5 @@ int main() {
         }
 
         
-    }
+    //}
 }
