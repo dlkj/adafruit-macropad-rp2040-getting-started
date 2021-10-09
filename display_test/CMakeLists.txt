@@ -14,11 +14,6 @@ target_link_libraries(display_test
 pico_enable_stdio_usb(display_test 1)
 pico_enable_stdio_uart(display_test 0)
 
-target_link_libraries(display_test
-        pico_stdlib
-        pico_bootsel_via_double_reset
-        )
-
 # Specify a GPIO to be used as a bootloader activity LED:
 target_compile_definitions(display_test PRIVATE
         PICO_BOOTSEL_VIA_DOUBLE_RESET_ACTIVITY_LED=13
