@@ -6,7 +6,6 @@ add_executable(rotary_test
 # pico_bootsel_via_double_reset library
 target_link_libraries(rotary_test
         pico_stdlib
-        hardware_spi
         pico_bootsel_via_double_reset
         )
 
