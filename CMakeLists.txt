@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.13)
 # initialize the SDK based on PICO_SDK_PATH
 # note: this must happen before project()
 include(pico_sdk_import.cmake)
+include(pico_extras_import.cmake)
+
 project(adafruit-macropad-rp2040-getting-started C CXX ASM)
 
 set(PICO_BOARD adafruit_macropad_rp2040)
@@ -25,3 +27,4 @@ add_subdirectory(display_test)
 add_subdirectory(neopixel_test)
 add_subdirectory(rotary_test)
 add_subdirectory(usb_keyboard_test)
+add_subdirectory(audio_test)
