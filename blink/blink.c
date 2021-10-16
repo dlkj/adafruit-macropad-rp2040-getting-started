@@ -1,6 +1,15 @@
+#include <stdio.h>
+
 #include "pico/stdlib.h"
+#include "pico/binary_info.h"
 
 int main() {
+
+    bi_decl(bi_program_name("blink"));
+    bi_decl(bi_program_description("blink the default LED"));
+
+    stdio_init_all();
+
 #ifndef PICO_DEFAULT_LED_PIN
 #warning blink example requires a board with a regular LED
 #else
